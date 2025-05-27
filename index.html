@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Economic Vitality of Canada's Potato Industry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices: 
+        - National Metrics: HTML cards for quick stats (Goal: Inform; Lib: HTML/Tailwind).
+        - Provincial Production/Yield Comparison: Bar charts (Goal: Compare; Lib: Chart.js).
+        - Provincial Details: JS-driven dynamic text content based on user selection (Goal: Inform/Organize; Lib: Vanilla JS).
+        - Production Allocation: Donut chart (Goal: Inform - proportions; Lib: Chart.js).
+        - Export Values by Type: Bar chart (Goal: Compare; Lib: Chart.js).
+        - Challenges/Opportunities: Clickable HTML lists to reveal details (Goal: Inform/Organize; Lib: Vanilla JS).
+        - Quote: Styled HTML blockquote (Goal: Inform; Lib: HTML/Tailwind).
+        All choices aim for clarity, interactivity where beneficial, and adherence to no SVG/Mermaid. Charts are responsive and use tooltips.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif; /* Assuming Inter is a common fallback, Tailwind uses system fonts by default */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Default max-width, can be overridden by Tailwind classes like max-w-xl */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Base height */
+            max-height: 400px; /* Max height */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+            .chart-container {
+                height: 350px;
+            }
+        }
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #ca8a04; /* amber-500 for hover */
+        }
+        .active-nav-link {
+            color: #ca8a04; /* amber-500 */
+            font-weight: 600;
+        }
+        .province-button.active {
+            background-color: #a16207; /* amber-700 */
+            color: white;
+        }
+        .collapsible-header {
+            cursor: pointer;
+        }
+        .collapsible-content {
+            max-height: 0;
+            display: none;
+            overflow: none;
+        }
+        .collapsible-content.open {
+            max-height: 500px; /* Adjust as needed */
+        }
+        .arrow {
+            rotate: 90;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-stone-800">
+
+    <header class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl sm:text-2xl font-bold">Canada's Potato Economy</h1>
+                <nav class="hidden md:flex space-x-4">
+                    <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Overview</a>
+                    <a href="#provincial" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Provinces</a>
+                    <a href="#segments" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Segments & Trade</a>
+                    <a href="#future" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Future</a>
+                    <a href="#quote" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Voice</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-amber-50 hover:text-white hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                    <span class="sr-only">Open main menu</span>
+                    <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#overview" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Overview</a>
+                <a href="#provincial" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Provinces</a>
+                <a href="#segments" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Segments & Trade</a>
+                <a href="#future" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Future</a>
+                <a href="#quote" class="nav-link block px-3 py-2 rounded-md text-base font-medium">Voice</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <section id="overview" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-6 text-center">Canada's Potato Powerhouse: A National Snapshot</h2>
+            <p class="text-lg text-stone-700 mb-8 text-center max-w-3xl mx-auto">
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-2">Total Output (Alberta, 2022)</h3>
+                    <p class="text-3xl font-bold text-amber-600">$2.87 Billion</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-2">GDP Contribution (Alberta, 2022)</h3>
+                    <p class="text-3xl font-bold text-amber-600">$1.33 Billion</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-2">FTE Jobs (National, 2022)</h3>
+                    <p class="text-3xl font-bold text-amber-600">9,390</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-2">Labour Income (National, 2022)</h3>
+                    <p class="text-3xl font-bold text-amber-600">$662 Million</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center sm:col-span-2 lg:col-span-1">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-2">Farm Cash Receipts (2023)</h3>
+                    <p class="text-3xl font-bold text-amber-600">$2 Billion</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="provincial" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-6 text-center">Digging Deeper: Provincial Contributions</h2>
+            <p class="text-md text-stone-600 text-center max-w-2xl mx-auto">
+            The potato is the fifth largest primary agriculture crop in Canada and the largest vegetable crop, accounting for 29% of all vegetable receipts.
+            </p>
+            <p class="text-lg text-stone-700 mb-8 text-center max-w-3xl mx-auto">
+            </p>
+            <div class="mb-8 flex flex-wrap justify-center gap-2 sm:gap-4">
+                <button class="province-button bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition active" data-province="Alberta">Alberta</button>
+                <button class="province-button bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition" data-province="PEI">Prince Edward Island</button>
+                <button class="province-button bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition" data-province="Manitoba">Manitoba</button>
+                <button class="province-button bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition" data-province="NewBrunswick">New Brunswick</button>
+                <button class="province-button bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition" data-province="Quebec">Quebec</button>
+                <button class="province-button bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg shadow transition" data-province="Ontario">Ontario</button>
+            </div>
+
+            <div id="province-details" class="bg-white p-6 rounded-lg shadow-lg mb-8 min-h-[200px]">
+                </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-4 text-center">National Production Share (2024)</h3>
+                    <div class="chart-container h-80 sm:h-96 md:max-w-lg">
+                        <canvas id="provincialProductionChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-4 text-center">Average Yield (cwt/acre, 2024)</h3>
+                    <div class="chart-container h-80 sm:h-96 md:max-w-lg">
+                        <canvas id="provincialYieldChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="segments" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-6 text-center">From Field to Fork: Industry Segments & Global Reach</h2>
+            <p class="text-lg text-stone-700 mb-8 text-center max-w-3xl mx-auto">
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-4 text-center">Potato Production Allocation (2023)</h3>
+                     <p class="text-sm text-stone-600 mb-4 text-center">Shows how total production is divided among processing, fresh/table, and seed sectors.</p>
+                    <div class="chart-container h-80 sm:h-96 md:max-w-md">
+                        <canvas id="productionAllocationChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold text-emerald-600 mb-4 text-center">Canadian Potato Exports by Value (2023/2024)</h3>
+                    <p class="text-sm text-stone-600 mb-4 text-center">Highlights the export value of different potato product categories. Total exports exceeded $3.6 Billion.</p>
+                    <div class="chart-container h-80 sm:h-96 md:max-w-lg">
+                        <canvas id="exportValueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-semibold text-emerald-600 mb-2">Export Dynamics</h3>
+                <p class="text-stone-700 mb-2">Canada is a net exporter of potatoes, with exports rising 8% to over $3.6 billion in 2023/2024. The U.S. is the dominant market, accounting for over 90% of exports in most categories. French fry exports to the U.S. alone reached $2.4 billion.</p>
+                <p class="text-stone-700">The industry is actively diversifying into Asian markets to mitigate risks and capture growth. Canada ranks among the top 10 global exporters for table stock and seed potatoes.</p>
+            </div>
+        </section>
+
+        <section id="future" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-6 text-center">Cultivating the Future: Challenges & Opportunities</h2>
+            <p class="text-lg text-stone-700 mb-8 text-center max-w-3xl mx-auto">
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-red-600 mb-4">Challenges</h3>
+                    <ul id="challenges-list" class="space-y-3">
+                        <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-red-100 rounded-md hover:bg-red-200">
+                                <span class="font-medium">Trade Tariffs & Protectionism</span>
+                                <span class="arrow text-red-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-red-200 rounded-b-md">
+                                Tariffs, especially from the U.S., disrupt supply chains, increase costs, and pressure producers. PEI is particularly vulnerable due to high U.S. export reliance.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-red-100 rounded-md hover:bg-red-200">
+                                <span class="font-medium">Environmental Factors & Climate Change</span>
+                                 <span class="arrow text-red-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-red-200 rounded-b-md">
+                                Unpredictable weather (droughts, wildfires), water restrictions threaten yields and quality. Reliance on finite water resources is a concern.
+                            </div>
+                        </li>
+                         <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-red-100 rounded-md hover:bg-red-200">
+                                <span class="font-medium">Market Fluctuations & Consumer Preferences</span>
+                                 <span class="arrow text-red-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-red-200 rounded-b-md">
+                                The industry must constantly adapt to shifting market demands and consumer tastes for different potato products.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-red-100 rounded-md hover:bg-red-200">
+                                <span class="font-medium">Agricultural Pests & Diseases</span>
+                                 <span class="arrow text-red-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-red-200 rounded-b-md">
+                                Threats like potato wart require robust response plans and scientific collaboration to protect crops and industry integrity.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-semibold text-green-600 mb-4">Opportunities</h3>
+                    <ul id="opportunities-list" class="space-y-3">
+                        <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-green-100 rounded-md hover:bg-green-200">
+                                <span class="font-medium">Expansion of Processing Capacity</span>
+                                <span class="arrow text-green-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-green-200 rounded-b-md">
+                                Major investments (e.g., McCain, Cavendish) are boosting capacity for value-added products like French fries, driving growth.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-green-100 rounded-md hover:bg-green-200">
+                                <span class="font-medium">Growing International Demand</span>
+                                <span class="arrow text-green-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-green-200 rounded-b-md">
+                                Surging global appetite for processed potatoes, especially in Asia, alongside strong U.S. demand, presents significant export opportunities.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-green-100 rounded-md hover:bg-green-200">
+                                <span class="font-medium">Investment in Irrigation Infrastructure</span>
+                                <span class="arrow text-green-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-green-200 rounded-b-md">
+                                Government and industry partnerships (e.g., Alberta's $933M investment) enhance water efficiency and enable expanded production.
+                            </div>
+                        </li>
+                         <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-green-100 rounded-md hover:bg-green-200">
+                                <span class="font-medium">Innovation & Research</span>
+                                <span class="arrow text-green-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-green-200 rounded-b-md">
+                                Continuous investment in R&D, education, and lab capacity is crucial for new varieties and improved cultivation practices.
+                            </div>
+                        </li>
+                         <li>
+                            <div class="collapsible-header flex justify-between items-center p-3 bg-green-100 rounded-md hover:bg-green-200">
+                                <span class="font-medium">Attraction of Young Talent</span>
+                                <span class="arrow text-green-600 transform transition-transform duration-300">&#9660;</span>
+                            </div>
+                            <div class="collapsible-content p-3 border border-t-0 border-green-200 rounded-b-md">
+                                Growing opportunities, especially in value-added processing, are drawing young people to potato farming, securing a future workforce.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="quote" class="mb-12 pt-16 -mt-16">
+            <h2 class="text-3xl font-bold text-emerald-700 mb-6 text-center">The Spoken Seed: A Voice of the Industry</h2>
+            <p class="text-lg text-stone-700 mb-8 text-center max-w-3xl mx-auto">
+            </p>
+            <div class="bg-amber-100 border-l-4 border-amber-500 text-amber-700 p-6 rounded-lg shadow-lg max-w-3xl mx-auto">
+                <p class="italic text-xl mb-4">"We're very pleased that we now have an accurate assessment of our industry's contribution and delighted with the result. The industry could not have grown to this scale without the goodwill and collaboration of all parties involved."</p>
+                <p class="text-right font-semibold">- James Bareman, Chairman of the Potato Growers of Alberta (PGA) board</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-stone-800 text-amber-50 py-8 text-center">
+        <p>&copy; <span id="currentYear"></span> MadRobin13 the Programmer</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+                // Close mobile menu if open
+                if (!mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        });
+        
+        // Active Nav Link Highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('header nav a, #mobile-menu a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 80) { // 80 as offset for sticky header
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav-link');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active-nav-link');
+                }
+            });
+        });
+
+
+        // Provincial Data
+        const provinceData = {
+            Alberta: {
+                impact: "$2.31 Billion (Provincial, 2022)",
+                jobs: "7,380 FTE Jobs (Provincial, 2022)",
+                production2023: "24%",
+                production2024: "23.7%",
+                yield2024: "412.0 cwt/acre",
+                focus: "High-yield processing, Seed exports, Extensive irrigation. Projected 20% growth in 3-5 years.",
+                fcr: "2% of provincial FCR"
+            },
+            PEI: {
+                impact: "$1.35 Billion (Provincial Economy)",
+                jobs: ">8% of Island's workforce",
+                production2023: "20%",
+                production2024: "20.4%",
+                yield2024: "N/A (not specified for 2024 in table)",
+                focus: "High-quality fresh potatoes (unique red soil), Processing. Heavily reliant on U.S. export market.",
+                fcr: "Over 55% of provincial FCR"
+            },
+            Manitoba: {
+                impact: "N/A",
+                jobs: "N/A",
+                production2023: "23%",
+                production2024: "21.6%",
+                yield2024: "362.1 cwt/acre",
+                focus: "Major French fry processing province, High average yields.",
+                fcr: "4% of provincial FCR"
+            },
+            NewBrunswick: {
+                impact: "N/A",
+                jobs: "N/A",
+                production2023: "12%",
+                production2024: "12.0%",
+                yield2024: "N/A (not specified for 2024 in table, but showed increase)",
+                focus: "Key French fry processing province, Increased yields in 2024.",
+                fcr: "22% of provincial FCR"
+            },
+            Quebec: {
+                impact: "N/A",
+                jobs: "N/A",
+                production2023: "10%",
+                production2024: "10.5%",
+                yield2024: "N/A (not specified for 2024 in table, but production/yields increased)",
+                focus: "Seed and fresh potatoes. Recovered from wet conditions in 2024.",
+                fcr: "N/A"
+            },
+            Ontario: {
+                impact: "N/A",
+                jobs: "N/A",
+                production2023: "7%",
+                production2024: "N/A (not specified for 2024)",
+                yield2024: "N/A",
+                focus: "Canada's largest potato chip sector.",
+                fcr: "N/A"
+            }
+        };
+
+        const provinceDetailsDiv = document.getElementById('province-details');
+        const provinceButtons = document.querySelectorAll('.province-button');
+
+        function updateProvinceDetails(provinceName) {
+            const data = provinceData[provinceName];
+            provinceDetailsDiv.innerHTML = `
+                <h4 class="text-2xl font-semibold text-emerald-700 mb-3">${provinceName.replace(/([A-Z])/g, ' $1').trim()}</h4>
+                <p class="mb-1"><strong class="text-stone-700">Economic Impact:</strong> ${data.impact}</p>
+                <p class="mb-1"><strong class="text-stone-700">FTE Jobs:</strong> ${data.jobs}</p>
+                <p class="mb-1"><strong class="text-stone-700">% of National Production (2024):</strong> ${data.production2024}</p>
+                <p class="mb-1"><strong class="text-stone-700">Average Yield (2024):</strong> ${data.yield2024}</p>
+                <p class="mb-1"><strong class="text-stone-700">Key Focus:</strong> ${data.focus}</p>
+                <p><strong class="text-stone-700">Farm Cash Receipts Contribution (2023):</strong> ${data.fcr}</p>
+            `;
+            provinceButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.province === provinceName) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
+        provinceButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateProvinceDetails(button.dataset.province);
+            });
+        });
+        updateProvinceDetails('Alberta'); // Initial display
+
+        // Chart.js Configuration
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { 
+                        color: '#57534e', // stone-600
+                        font: { size: 10 } 
+                    },
+                    grid: { color: '#d6d3d1' } // stone-300
+                },
+                x: {
+                    ticks: { 
+                        color: '#57534e', // stone-600
+                        font: { size: 10 },
+                        maxRotation: 45,
+                        minRotation: 45,
+                        callback: function(value, index, values) {
+                            const label = this.getLabelForValue(value);
+                            if (label.length > 15) {
+                                return label.substring(0, 15) + '...';
+                            }
+                            return label;
+                        }
+                    },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: { 
+                        color: '#57534e', // stone-600
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 12 },
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y + (context.chart.id === 'provincialProductionChart' ? '%' : (context.chart.id === 'provincialYieldChart' ? ' cwt/acre' : ''));
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+        
+        const chartColors = ['#059669', '#f59e0b', '#3b82f6', '#ef4444', '#8b5cf6', '#14b8a6']; // emerald-600, amber-500, blue-500, red-500, violet-500, teal-500
+
+        // Provincial Production Chart
+        const provincialProductionCtx = document.getElementById('provincialProductionChart').getContext('2d');
+        new Chart(provincialProductionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Alberta', 'PEI', 'Manitoba', 'New Brunswick', 'Quebec', 'Ontario (2023)'],
+                datasets: [{
+                    label: '% of National Production (2024)',
+                    data: [23.7, 20.4, 21.6, 12.0, 10.5, 7.0], // Ontario data is for 2023 as per report
+                    backgroundColor: chartColors,
+                    borderColor: chartColors.map(color => color + '99'),
+                    borderWidth: 1
+                }]
+            },
+            options: chartOptions
+        });
+
+        // Provincial Yield Chart
+        const provincialYieldCtx = document.getElementById('provincialYieldChart').getContext('2d');
+        new Chart(provincialYieldCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Alberta', 'Manitoba', 'Canada Avg.'], // PEI, NB, Quebec not specified for 2024 in table
+                datasets: [{
+                    label: 'Average Yield (cwt/acre, 2024)',
+                    data: [412.0, 362.1, 330.9],
+                    backgroundColor: [chartColors[0], chartColors[2], chartColors[1]],
+                    borderColor: [chartColors[0]+'99', chartColors[2]+'99', chartColors[1]+'99'],
+                    borderWidth: 1
+                }]
+            },
+            options: chartOptions
+        });
+        
+        // Production Allocation Chart
+        const productionAllocationCtx = document.getElementById('productionAllocationChart').getContext('2d');
+        new Chart(productionAllocationCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Processing', 'Fresh/Table', 'Seed'],
+                datasets: [{
+                    label: 'Production Allocation (2023)',
+                    data: [68, 21, 11],
+                    backgroundColor: [chartColors[0], chartColors[1], chartColors[2]],
+                    hoverOffset: 4
+                }]
+            }
+            //options: { ...chartOptions, scales: {} } // Remove scales for doughnut
+        });
+
+        // Export Value Chart
+        const exportValueCtx = document.getElementById('exportValueChart').getContext('2d');
+        new Chart(exportValueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['French Fries', 'Fresh Potatoes', 'Other Processed', 'Seed Potatoes'],
+                datasets: [{
+                    label: 'Export Value (CAD, 2023/2024)',
+                    data: [2700000000, 493000000, 424000000, 50000000],
+                    backgroundColor: [chartColors[0], chartColors[1], chartColors[2], chartColors[3]],
+                    borderColor: [chartColors[0]+'99', chartColors[1]+'99', chartColors[2]+'99', chartColors[3]+'99'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                     y: {
+                        beginAtZero: true,
+                        ticks: { 
+                            color: '#57534e', 
+                            font: { size: 10 },
+                            callback: function(value) { return (value / 1000000) + 'M'; } // Format as millions
+                        },
+                        grid: { color: '#d6d3d1' }
+                    },
+                    x: {
+                        ticks: { 
+                            color: '#57534e', 
+                            font: { size: 10 },
+                            maxRotation: 45,
+                            minRotation: 45,
+                             callback: function(value, index, values) {
+                                const label = this.getLabelForValue(value);
+                                if (label.length > 15) {
+                                    return label.substring(0, 15) + '...';
+                                }
+                                return label;
+                            }
+                        },
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    ...chartOptions.plugins,
+                    tooltip: {
+                        ...chartOptions.plugins.tooltip,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                     label += '$' + (context.parsed.y / 1000000).toFixed(1) + 'M';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Collapsible sections for Challenges and Opportunities
+        function setupCollapsibles(listId) {
+            const listItems = document.querySelectorAll(`#${listId} .collapsible-header`);
+            listItems.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const parent = header.parentElement
+                    const arrow = header.querySelector('.arrow');
+                    content.classList.toggle('open');
+                    arrow.classList.toggle('rotate-180'); // Assuming you add a rotate class
+                    if (content.classList.contains('open')) {
+                        content.style.display = "block"
+                        content.style.maxHeight = content.scrollHeight + "px";
+                        arrow.innerHTML = '&#9660;'; // Up arrow
+                    } else {
+                        content.style.maxHeight = 0;
+                        arrow.innerHTML = '&#9660;'; // Down arrow
+                        content.style.display = "none"
+                    }
+                });
+            });
+        }
+        setupCollapsibles('challenges-list');
+        setupCollapsibles('opportunities-list');
+
+    </script>
+</body>
+</html>
