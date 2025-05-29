@@ -3,38 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Economic Vitality of Canada's Potato Industry</title>
+    <title>Canada's Potato Industry</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Visualization & Content Choices: 
-        - National Metrics: HTML cards for quick stats (Goal: Inform; Lib: HTML/Tailwind).
-        - Provincial Production/Yield Comparison: Bar charts (Goal: Compare; Lib: Chart.js).
-        - Provincial Details: JS-driven dynamic text content based on user selection (Goal: Inform/Organize; Lib: Vanilla JS).
-        - Production Allocation: Donut chart (Goal: Inform - proportions; Lib: Chart.js).
-        - Export Values by Type: Bar chart (Goal: Compare; Lib: Chart.js).
-        - Challenges/Opportunities: Clickable HTML lists to reveal details (Goal: Inform/Organize; Lib: Vanilla JS).
-        - Quote: Styled HTML blockquote (Goal: Inform; Lib: HTML/Tailwind).
-        All choices aim for clarity, interactivity where beneficial, and adherence to no SVG/Mermaid. Charts are responsive and use tooltips.
-    -->
     <style>
         body {
-            font-family: 'Inter', sans-serif; /* Assuming Inter is a common fallback, Tailwind uses system fonts by default */
+            font-family: 'Inter', sans-serif;
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px; /* Default max-width, can be overridden by Tailwind classes like max-w-xl */
+            max-width: 600px; 
             margin-left: auto;
             margin-right: auto;
-            height: 300px; /* Base height */
-            max-height: 400px; /* Max height */
+            height: 300px; 
+            max-height: 400px; 
         }
-        @media (min-width: 768px) { /* md breakpoint */
+        @media (min-width: 768px) { 
             .chart-container {
                 height: 350px;
             }
         }
-        @media (min-width: 1024px) { /* lg breakpoint */
+        @media (min-width: 1024px) {
             .chart-container {
                 height: 400px;
             }
@@ -43,14 +33,14 @@
             transition: color 0.3s ease;
         }
         .nav-link:hover {
-            color: #ca8a04; /* amber-500 for hover */
+            color: #ca8a04;  
         }
         .active-nav-link {
-            color: #ca8a04; /* amber-500 */
+            color: #ca8a04;
             font-weight: 600;
         }
         .province-button.active {
-            background-color: #a16207; /* amber-700 */
+            background-color: #a16207; 
             color: white;
         }
         .collapsible-header {
@@ -62,7 +52,7 @@
             overflow: none;
         }
         .collapsible-content.open {
-            max-height: 500px; /* Adjust as needed */
+            max-height: 500px; 
         }
         .arrow {
             rotate: 90;
@@ -309,14 +299,12 @@
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
-        // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         mobileMenuButton.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
         });
 
-        // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -327,14 +315,12 @@
                         behavior: 'smooth'
                     });
                 }
-                // Close mobile menu if open
                 if (!mobileMenu.classList.contains('hidden')) {
                     mobileMenu.classList.add('hidden');
                 }
             });
         });
         
-        // Active Nav Link Highlighting
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('header nav a, #mobile-menu a');
 
@@ -342,7 +328,7 @@
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
-                if (pageYOffset >= sectionTop - 80) { // 80 as offset for sticky header
+                if (pageYOffset >= sectionTop - 80) { 
                     current = section.getAttribute('id');
                 }
             });
@@ -356,7 +342,6 @@
         });
 
 
-        // Provincial Data
         const provinceData = {
             Alberta: {
                 impact: "$2.31 Billion (Provincial, 2022)",
@@ -441,9 +426,8 @@
                 updateProvinceDetails(button.dataset.province);
             });
         });
-        updateProvinceDetails('Alberta'); // Initial display
+        updateProvinceDetails('Alberta'); 
 
-        // Chart.js Configuration
         const chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -451,14 +435,14 @@
                 y: {
                     beginAtZero: true,
                     ticks: { 
-                        color: '#57534e', // stone-600
+                        color: '#57534e', 
                         font: { size: 10 } 
                     },
-                    grid: { color: '#d6d3d1' } // stone-300
+                    grid: { color: '#d6d3d1' } 
                 },
                 x: {
                     ticks: { 
-                        color: '#57534e', // stone-600
+                        color: '#57534e', 
                         font: { size: 10 },
                         maxRotation: 45,
                         minRotation: 45,
@@ -476,7 +460,7 @@
             plugins: {
                 legend: {
                     labels: { 
-                        color: '#57534e', // stone-600
+                        color: '#57534e', 
                         font: { size: 12 }
                     }
                 },
@@ -500,9 +484,8 @@
             }
         };
         
-        const chartColors = ['#059669', '#f59e0b', '#3b82f6', '#ef4444', '#8b5cf6', '#14b8a6']; // emerald-600, amber-500, blue-500, red-500, violet-500, teal-500
+        const chartColors = ['#059669', '#f59e0b', '#3b82f6', '#ef4444', '#8b5cf6', '#14b8a6']; 
 
-        // Provincial Production Chart
         const provincialProductionCtx = document.getElementById('provincialProductionChart').getContext('2d');
         new Chart(provincialProductionCtx, {
             type: 'bar',
@@ -510,7 +493,7 @@
                 labels: ['Alberta', 'PEI', 'Manitoba', 'New Brunswick', 'Quebec', 'Ontario (2023)'],
                 datasets: [{
                     label: '% of National Production (2024)',
-                    data: [23.7, 20.4, 21.6, 12.0, 10.5, 7.0], // Ontario data is for 2023 as per report
+                    data: [23.7, 20.4, 21.6, 12.0, 10.5, 7.0], 
                     backgroundColor: chartColors,
                     borderColor: chartColors.map(color => color + '99'),
                     borderWidth: 1
@@ -519,12 +502,12 @@
             options: chartOptions
         });
 
-        // Provincial Yield Chart
+        
         const provincialYieldCtx = document.getElementById('provincialYieldChart').getContext('2d');
         new Chart(provincialYieldCtx, {
             type: 'bar',
             data: {
-                labels: ['Alberta', 'Manitoba', 'Canada Avg.'], // PEI, NB, Quebec not specified for 2024 in table
+                labels: ['Alberta', 'Manitoba', 'Canada Avg.'], 
                 datasets: [{
                     label: 'Average Yield (cwt/acre, 2024)',
                     data: [412.0, 362.1, 330.9],
@@ -536,7 +519,6 @@
             options: chartOptions
         });
         
-        // Production Allocation Chart
         const productionAllocationCtx = document.getElementById('productionAllocationChart').getContext('2d');
         new Chart(productionAllocationCtx, {
             type: 'doughnut',
@@ -549,10 +531,8 @@
                     hoverOffset: 4
                 }]
             }
-            //options: { ...chartOptions, scales: {} } // Remove scales for doughnut
         });
 
-        // Export Value Chart
         const exportValueCtx = document.getElementById('exportValueChart').getContext('2d');
         new Chart(exportValueCtx, {
             type: 'bar',
@@ -574,7 +554,7 @@
                         ticks: { 
                             color: '#57534e', 
                             font: { size: 10 },
-                            callback: function(value) { return (value / 1000000) + 'M'; } // Format as millions
+                            callback: function(value) { return (value / 1000000) + 'M'; } 
                         },
                         grid: { color: '#d6d3d1' }
                     },
@@ -616,7 +596,6 @@
             }
         });
 
-        // Collapsible sections for Challenges and Opportunities
         function setupCollapsibles(listId) {
             const listItems = document.querySelectorAll(`#${listId} .collapsible-header`);
             listItems.forEach(header => {
@@ -625,14 +604,14 @@
                     const parent = header.parentElement
                     const arrow = header.querySelector('.arrow');
                     content.classList.toggle('open');
-                    arrow.classList.toggle('rotate-180'); // Assuming you add a rotate class
+                    arrow.classList.toggle('rotate-180'); 
                     if (content.classList.contains('open')) {
                         content.style.display = "block"
                         content.style.maxHeight = content.scrollHeight + "px";
-                        arrow.innerHTML = '&#9660;'; // Up arrow
+                        arrow.innerHTML = '&#9660;'; 
                     } else {
                         content.style.maxHeight = 0;
-                        arrow.innerHTML = '&#9660;'; // Down arrow
+                        arrow.innerHTML = '&#9660;'; 
                         content.style.display = "none"
                     }
                 });
